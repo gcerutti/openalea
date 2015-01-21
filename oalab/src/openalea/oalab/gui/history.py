@@ -71,6 +71,7 @@ class HistoryWidget(QtGui.QTextBrowser):
 
     def finalize(self):
         # TODO: unregister history
+        pass
 
 
 def main():
