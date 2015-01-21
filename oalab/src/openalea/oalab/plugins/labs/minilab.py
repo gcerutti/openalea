@@ -7,7 +7,7 @@ class MiniLab(object):
     applets = ['EditorManager']
 
     # NEW LAYOUT API
-    menu_names = ('File', 'Edit', 'Help')
+    menu_names = ('Project', 'Edit', 'Help')
 
     layout = {
         "children": {

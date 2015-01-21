@@ -79,6 +79,9 @@ class World(VPLScene, AbstractListener):
             world, old, new = data
             self._emit_value_changed(old, new)
 
+    def update_namespace(self, interpreter):
+        interpreter.user_ns['world'] = self
+
     def __hash__(self):
         return id(self)
 
