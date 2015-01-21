@@ -30,12 +30,20 @@ def launch_lab(plugin_class):
     from openalea.core.service.introspection import alias
 
     plugin = plugin_class()
-    lab = plugin()
-    layout_path = Path(get_openalea_home_dir()) / '%s.oaui' % lab.name
+    lab_class = plugin()
+    layout_path = Path(get_openalea_home_dir()) / '%s.oaui' % lab_class.name
     OALabMainWin.DEFAULT_LAYOUT_PATH = layout_path
-    OALabMainWin.DEFAULT_LAYOUT = lab.layout
-    OALabMainWin.DEFAULT_MENU_NAMES = lab.menu_names
+    OALabMainWin.DEFAULT_LAYOUT = lab_class.layout
+    OALabMainWin.DEFAULT_MENU_NAMES = lab_class.menu_names
+    if hasattr(lab_class, "start"):
+        lab_class.start()
     win = OALabMainWin()
+    if hasattr(lab_class, "initialize"):
+        lab_class.initialize()
+    if hasattr(lab_class, "finalize"):
+        win.aboutToClose.connect(lab_class.finalize)
+    if hasattr(lab_class, "stop"):
+        win.closed.connect(lab_class.stop)
     win.setWindowTitle('OpenAleaLab "%s"' % alias(plugin))
     win.showMaximized()
     win.raise_()

@@ -135,3 +135,19 @@ class MiniLab(object):
             mainwin.add_plugin(name=name)
         # Initialize all applets
         mainwin.initialize()
+
+    @classmethod
+    def start(cls, *args, **kwds):
+        pass
+
+    @classmethod
+    def initialize(cls, *args, **kwds):
+        pass
+
+    @classmethod
+    def finalize(cls, *args, **kwds):
+        pass
+
+    @classmethod
+    def stop(cls, *args, **kwds):
+        pass

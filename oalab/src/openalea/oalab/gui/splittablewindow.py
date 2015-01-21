@@ -841,6 +841,8 @@ class OALabSplittableUi(SplittableUI):
 
 class OALabMainWin(QtGui.QMainWindow):
     appletSet = QtCore.Signal(object, object)
+    closed = QtCore.Signal(object)
+    aboutToClose = QtCore.Signal(object)
     DEFAULT_MENU_NAMES = ('Project', 'Edit', 'View', 'Help')
 
     DEFAULT_LAYOUT = dict(
@@ -918,8 +920,11 @@ class OALabMainWin(QtGui.QMainWindow):
         return layout
 
     def closeEvent(self, event):
+        self.aboutToClose.emit(self)
         with open(self.layout_filepath, 'w') as layout_file:
             json.dump(self.layout(), layout_file, sort_keys=True, indent=2)
+        super(QtGui.QMainWindow, self).closeEvent(event)
+        self.closed.emit(self)
 
     def set_edit_mode(self, mode=True):
         for widget in self.splittable.getAllContents():
