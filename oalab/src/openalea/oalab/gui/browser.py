@@ -32,6 +32,7 @@ class GenericFileBrowser(QtGui.QWidget):
         self.model = QtGui.QFileSystemModel()
         self.tree = QtGui.QTreeView()
         self.tree.setModel(self.model)
+        self.tree.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self._home_dir = settings.get_default_home_dir()
         self._cwd = Path(".").abspath()
         self.model.setRootPath(self._home_dir)
@@ -66,6 +67,15 @@ class GenericFileBrowser(QtGui.QWidget):
     def _on_index_clicked(self, index):
         filename = self.model.filePath(index)
         self.pathSelected.emit(Path(filename))
+
+    def set_properties(self, properties):
+        columns = properties.get('columns', [0])
+        for icol in range(self.model.columnCount()):
+            self.tree.setColumnHidden(icol, icol not in columns)
+
+    def properties(self):
+        columns = [i for i in range(self.model.columnCount()) if not self.tree.isColumnHidden(i)]
+        return dict(columns=columns)
 
 
 class FileBrowser(GenericFileBrowser):
