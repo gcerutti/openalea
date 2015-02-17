@@ -35,18 +35,25 @@ def launch_lab(plugin_class):
     OALabMainWin.DEFAULT_LAYOUT_PATH = layout_path
     OALabMainWin.DEFAULT_LAYOUT = lab_class.layout
     OALabMainWin.DEFAULT_MENU_NAMES = lab_class.menu_names
+    OALabMainWin.LAB = lab_class
     if hasattr(lab_class, "start"):
         lab_class.start()
     win = OALabMainWin()
+    if hasattr(lab_class, 'connect_applet'):
+        win.appletSet.connect(lab_class.connect_applet)
+    win.emit_applet_set()
+
     if hasattr(lab_class, "initialize"):
         lab_class.initialize()
     if hasattr(lab_class, "finalize"):
         win.aboutToClose.connect(lab_class.finalize)
     if hasattr(lab_class, "stop"):
         win.closed.connect(lab_class.stop)
+    win.initialize()
     win.setWindowTitle('OpenAleaLab "%s"' % alias(plugin))
     win.showMaximized()
     win.raise_()
+
     return win
 
 
