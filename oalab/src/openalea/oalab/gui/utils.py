@@ -135,6 +135,15 @@ class Splitter(QtGui.QSplitter):
         )
 
 
+def password():
+    password = QtGui.QLineEdit()
+    password.setEchoMode(QtGui.QLineEdit.Password)
+    dialog = ModalDialog(password)
+    if dialog.exec_():
+        pwd = password.text()
+        return pwd
+
+
 def make_error_dialog(e, parent=None, icon=QtGui.QMessageBox.Critical):
     if not isinstance(e, CustomException):
         e = cast_error(e, CustomException)
