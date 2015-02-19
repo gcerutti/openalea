@@ -62,11 +62,11 @@ class World(VPLScene, AbstractListener):
         if not self._block:
             self.notify_listeners(('world_sync', self))
 
-    def add(self, data, transform=None, name=None):
+    def add(self, data, transform=None, name=None, **kwargs):
         if name is None:
             name = 'data_%03d' % self.count
             self.count += 1
-        obj = WorldObject(data)
+        obj = WorldObject(data, **kwargs)
         if transform:
             def f():
                 return transform(data)
@@ -98,7 +98,7 @@ class WorldObject(Observed):
         - date when object has been added to scene
     """
 
-    def __init__(self, obj, model_id=None, output_id=None, transform=None):
+    def __init__(self, obj, model_id=None, output_id=None, transform=None, **kwargs):
         """
         :param obj: object to store
         :param model_id: identifier of the model used to create this object
@@ -111,6 +111,7 @@ class WorldObject(Observed):
         self.model_id = model_id
         self.output_id = output_id
         self.in_scene = True
+        self.kwargs = kwargs
 
     @property
     def obj(self):
