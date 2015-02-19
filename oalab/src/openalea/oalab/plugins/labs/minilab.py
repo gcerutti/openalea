@@ -1,7 +1,7 @@
 
-def connect(old, new, sender, receiver, connections):
-    sender_name, signal_name = sender.split(':')
-    receiver_name, slot_name = receiver.split(':')
+def connect(old, new, sender_str, receiver_str, existing_connections):
+    sender_name, signal_name = sender_str.split(':')
+    receiver_name, slot_name = receiver_str.split(':')
 
     if old == new:
         return
@@ -26,16 +26,18 @@ def connect(old, new, sender, receiver, connections):
     if signals and slots:
         for i, signal in enumerate(signals):
             for j, slot in enumerate(slots):
-                connection = '%s_%d -> %s_%d' % (sender_name, i, receiver_name, j)
-                if connection not in connections:
+                connection = '%s_%d -> %s_%d' % (sender_str, i, receiver_str, j)
+                if connection not in existing_connections:
+                    print connection
                     signal.connect(slot)
-                    connections.append(connection)
+                    existing_connections.append(connection)
                 else:
                     pass
 
 
 class MiniLab(object):
 
+    existing_connections = []  # list to store all created connections
     connections = []
 
     name = 'mini'
@@ -175,11 +177,11 @@ class MiniLab(object):
 
     @classmethod
     def _connect(cls, old, new, sender, receiver):
-        connect(old, new, sender, receiver, cls.connections)
+        connect(old, new, sender, receiver, cls.existing_connections)
 
     @classmethod
     def connect_applet(cls, old, new):
-        for connection in cls.layout.get('connections', []):
+        for connection in cls.connections:
             cls._connect(old, new, *connection)
 
     @classmethod
