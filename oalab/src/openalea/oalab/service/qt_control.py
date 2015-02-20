@@ -113,7 +113,7 @@ def qt_container(container, **kwargs):
         editor = qt_editor(control, 'hline')
         if editor:
             widget.editor[control] = weakref.ref(editor)
-            layout.addRow(control.name, editor)
+            layout.addRow(control.alias, editor)
     return widget
 
 
