@@ -64,7 +64,7 @@ class PyCodeEditor(PyCodeEditBase):
         # python specifics
         self.modes.append(pymodes.PyAutoIndentMode())
         self.modes.append(pymodes.PyAutoCompleteMode())
-        self.modes.append(pymodes.FrostedCheckerMode())
+        # self.modes.append(pymodes.FrostedCheckerMode())
         self.modes.append(pymodes.PEP8CheckerMode())
         self.modes.append(pymodes.CalltipsMode())
         self.modes.append(pymodes.PyIndenterMode())
@@ -165,7 +165,8 @@ class PyCodeEditor(PyCodeEditBase):
             data = decode('openalealab/omero', source.data('openalealab/omero'))
             if data is None:
                 return
-            name, uri = data.split('=')
+            name = data.split('=')[0]
+            uri = '='.join(data.split('=')[1:])
             pycode = 'from openalea.core.service import db'
             pycode += '\n%s = db.get(%r)' % (name.strip().replace('.', '_'), uri.strip())
             cursor = self.textCursor()

@@ -31,9 +31,19 @@ class Follower(AbstractListener):
         self._old_value = None
         self.name = name
         self.callback = func
+        self._listen = True
+
+    def ignore_events(self):
+        self._listen = False
+
+    def follow_events(self):
+        self._listen = True
 
     @lock_notify
     def notify(self, sender, event):
+        if self._listen is False:
+            return
+
         if event:
             signal, data = event
             if signal == 'control_value_changed':
@@ -194,6 +204,14 @@ class ControlContainer(Observed, AbstractListener):
             if key == control.name:
                 return True
         return False
+
+    def disable_followers(self):
+        for follower in self.follower.values():
+            follower.ignore_events()
+
+    def enable_followers(self):
+        for follower in self.follower.values():
+            follower.follow_events()
 
     def register_follower(self, name, func):
         if name in self.follower:

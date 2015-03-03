@@ -332,7 +332,8 @@ class TextEditor(QtGui.QTextEdit):
             data = decode('openalealab/omero', source.data('openalealab/omero'))
             if data is None:
                 return
-            name, uri = data.split('=')
+            name = data.split('=')[0]
+            uri = '='.join(data.split('=')[1:])
             pycode = 'from openalea.core.service import db'
             pycode += '\n%s = db.get(%r)' % (name.strip().replace('.', '_'), uri.strip())
             cursor = self.textCursor()
